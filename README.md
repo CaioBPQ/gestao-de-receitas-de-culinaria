@@ -39,9 +39,10 @@ $env:DB_NAME = 'ReceitasDB'
 5. Executar o programa:
 
 ```powershell
-python .\python\main.py
+python .\python\app.py
 ```
 
 Observações:
 - O `db.py` espera o banco `ReceitasDB` criado. Se quiser automatizar a criação, chame `db.init_db()` apontando para o arquivo SQL.
 - As entradas de ingredientes convertem a quantidade para inteiro ao inserir no banco; ajuste conforme necessário.
+
