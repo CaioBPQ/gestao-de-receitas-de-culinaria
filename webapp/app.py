@@ -65,14 +65,17 @@ def nova():
         categoria = request.form.get('categoria')
         num = request.form.get('numero_de_pessoas')
         preparacao = request.form.get('preparacao')
-        ingredientes_raw = request.form.get('ingredientes')
+        # ingredientes recebidos como campos repetidos: ing_nome, ing_quantidade, ing_unidade
+        nomes = request.form.getlist('ing_nome')
+        quantidades = request.form.getlist('ing_quantidade')
+        unidades = request.form.getlist('ing_unidade')
         ingredientes = []
-        # ingredientes esperados no formato: nome|quantidade|unidade por linha
-        if ingredientes_raw:
-            for line in ingredientes_raw.splitlines():
-                parts = [p.strip() for p in line.split('|')]
-                if len(parts) == 3:
-                    ingredientes.append({'nome': parts[0], 'quantidade': parts[1], 'unidade': parts[2]})
+        for i, nome_ing in enumerate(nomes):
+            if not nome_ing or nome_ing.strip() == '':
+                continue
+            quantidade = quantidades[i] if i < len(quantidades) else ''
+            unidade = unidades[i] if i < len(unidades) else ''
+            ingredientes.append({'nome': nome_ing.strip(), 'quantidade': quantidade.strip(), 'unidade': unidade.strip()})
 
         receita = {
             'nome': nome,
@@ -102,13 +105,16 @@ def editar(codigo):
         categoria = request.form.get('categoria')
         num = request.form.get('numero_de_pessoas')
         preparacao = request.form.get('preparacao')
-        ingredientes_raw = request.form.get('ingredientes')
+        nomes = request.form.getlist('ing_nome')
+        quantidades = request.form.getlist('ing_quantidade')
+        unidades = request.form.getlist('ing_unidade')
         ingredientes = []
-        if ingredientes_raw:
-            for line in ingredientes_raw.splitlines():
-                parts = [p.strip() for p in line.split('|')]
-                if len(parts) == 3:
-                    ingredientes.append({'nome': parts[0], 'quantidade': parts[1], 'unidade': parts[2]})
+        for i, nome_ing in enumerate(nomes):
+            if not nome_ing or nome_ing.strip() == '':
+                continue
+            quantidade = quantidades[i] if i < len(quantidades) else ''
+            unidade = unidades[i] if i < len(unidades) else ''
+            ingredientes.append({'nome': nome_ing.strip(), 'quantidade': quantidade.strip(), 'unidade': unidade.strip()})
 
         receita = {
             'nome': nome,
@@ -131,12 +137,11 @@ def editar(codigo):
     if not receita:
         flash('Receita não encontrada', 'danger')
         return redirect(url_for('index'))
-    # transformar ingredientes em texto para o textarea
-    linhas = []
+    # transformar ingredientes em lista para preencher linhas
+    ingredientes_list = []
     for ing in receita.get('ingredientes', []):
-        linhas.append(f"{ing['Ingrediente']}|{ing['Quantidade']}|{ing['Medida']}")
-    ingredientes_text = "\n".join(linhas)
-    return render_template('edit.html', receita=receita, ingredientes_text=ingredientes_text)
+        ingredientes_list.append({'nome': ing['Ingrediente'], 'quantidade': ing['Quantidade'], 'unidade': ing['Medida']})
+    return render_template('edit.html', receita=receita, ingredientes_list=ingredientes_list)
 
 
 @app.route('/excluir/<int:codigo>', methods=['POST'])
