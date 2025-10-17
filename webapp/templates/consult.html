@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}Consultar Receitas{% endblock %}
+
+{% block content %}
+  <h1>Consultar Receitas</h1>
+  <form method="get" class="row gy-2 gx-3 align-items-center mb-3">
+    <div class="col-auto">
+      <label class="visually-hidden">Dificuldade</label>
+      <input class="form-control" name="dificuldade" placeholder="Dificuldade">
+    </div>
+    <div class="col-auto">
+      <label class="visually-hidden">Categoria</label>
+      <input class="form-control" name="categoria" placeholder="Categoria">
+    </div>
+    <div class="col-auto">
+      <label class="visually-hidden">Tempo máximo</label>
+      <input class="form-control" name="tempo_max" type="number" placeholder="Tempo max (min)">
+    </div>
+    <div class="col-auto">
+      <label class="visually-hidden">Pessoas mínimas</label>
+      <input class="form-control" name="pessoas_min" type="number" placeholder="Serve ao menos">
+    </div>
+    <div class="col-auto">
+      <button class="btn btn-primary" type="submit">Filtrar</button>
+    </div>
+  </form>
+
+  <div class="list-group">
+    {% for r in receitas %}
+      <a href="/editar/{{ r['CodigoReceita'] }}" class="list-group-item list-group-item-action">{{ r['CodigoReceita'] }} - {{ r['Nome'] }} <small class="text-muted">({{ r['Categoria'] }})</small></a>
+    {% else %}
+      <div class="alert alert-secondary">Nenhuma receita encontrada.</div>
+    {% endfor %}
+  </div>
+{% endblock %}

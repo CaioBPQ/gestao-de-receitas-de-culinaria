@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Nova Receita{% endblock %}
+
+{% block content %}
+  <h1>Criar nova receita</h1>
+  <form method="post">
+    <div class="mb-3">
+      <label class="form-label">Nome</label>
+      <input class="form-control" type="text" name="nome" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Dificuldade</label>
+      <input class="form-control" type="text" name="dificuldade">
+    </div>
+    <div class="mb-3 row">
+      <div class="col">
+        <label class="form-label">Tempo (min)</label>
+        <input class="form-control" type="number" name="tempo_preparacao">
+      </div>
+      <div class="col">
+        <label class="form-label">Categoria</label>
+        <input class="form-control" type="text" name="categoria">
+      </div>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Nº pessoas</label>
+      <input class="form-control" type="number" name="numero_de_pessoas">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Preparação</label>
+      <textarea class="form-control" name="preparacao"></textarea>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Ingredientes (uma por linha: nome|quantidade|unidade)</label>
+      <textarea class="form-control" name="ingredientes"></textarea>
+    </div>
+    <button class="btn btn-primary" type="submit">Criar</button>
+    <a class="btn btn-secondary ms-2" href="/">Voltar</a>
+  </form>
+{% endblock %}

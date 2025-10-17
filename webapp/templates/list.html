@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista de Receitas{% endblock %}
+
+{% block content %}
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>Receitas</h1>
+    <a class="btn btn-primary" href="/nova">Adicionar nova receita</a>
+  </div>
+  <div class="list-group">
+    {% for r in receitas %}
+      <a href="/editar/{{ r['CodigoReceita'] }}" class="list-group-item list-group-item-action">{{ r['CodigoReceita'] }} - {{ r['Nome'] }} <small class="text-muted">({{ r['Categoria'] }})</small></a>
+    {% else %}
+      <div class="alert alert-secondary">Nenhuma receita encontrada.</div>
+    {% endfor %}
+  </div>
+{% endblock %}

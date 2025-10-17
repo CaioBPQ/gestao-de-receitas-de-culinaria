@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Editar Receita{% endblock %}
+
+{% block content %}
+  <h1>Editar Receita</h1>
+  <form method="post">
+    <div class="mb-3">
+      <label class="form-label">Nome</label>
+      <input class="form-control" type="text" name="nome" value="{{ receita.Nome }}" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Dificuldade</label>
+      <input class="form-control" type="text" name="dificuldade" value="{{ receita.Dificuldade }}">
+    </div>
+    <div class="mb-3 row">
+      <div class="col">
+        <label class="form-label">Tempo (min)</label>
+        <input class="form-control" type="number" name="tempo_preparacao" value="{{ receita.TempoPreparacao }}">
+      </div>
+      <div class="col">
+        <label class="form-label">Categoria</label>
+        <input class="form-control" type="text" name="categoria" value="{{ receita.Categoria }}">
+      </div>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Nº pessoas</label>
+      <input class="form-control" type="number" name="numero_de_pessoas" value="{{ receita.NumPessoas }}">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Preparação</label>
+      <textarea class="form-control" name="preparacao">{{ receita.Preparacao }}</textarea>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Ingredientes (uma por linha: nome|quantidade|unidade)</label>
+      <textarea class="form-control" name="ingredientes">{{ ingredientes_text }}</textarea>
+    </div>
+    <button class="btn btn-primary" type="submit">Salvar</button>
+    <a class="btn btn-secondary ms-2" href="/">Voltar</a>
+  </form>
+  <form method="post" action="/excluir/{{ receita.CodigoReceita }}" onsubmit="return confirm('Tem certeza que deseja excluir?');" class="mt-3">
+    <button class="btn btn-danger">Excluir</button>
+  </form>
+{% endblock %}

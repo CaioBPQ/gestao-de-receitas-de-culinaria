@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Gerir Receitas{% endblock %}
+
+{% block content %}
+  <h1>Gerir Receitas</h1>
+  <div class="list-group">
+    {% for r in receitas %}
+      <div class="list-group-item d-flex justify-content-between align-items-center">
+        <div>
+          <strong>{{ r['Nome'] }}</strong> <small class="text-muted">({{ r['Categoria'] }})</small>
+        </div>
+        <div>
+          <a class="btn btn-sm btn-outline-primary" href="/editar/{{ r['CodigoReceita'] }}">Editar</a>
+          <form method="post" action="/excluir/{{ r['CodigoReceita'] }}" style="display:inline-block;" onsubmit="return confirm('Tem certeza?');">
+            <button class="btn btn-sm btn-danger">Excluir</button>
+          </form>
+        </div>
+      </div>
+    {% else %}
+      <div class="alert alert-secondary">Nenhuma receita encontrada.</div>
+    {% endfor %}
+  </div>
+{% endblock %}

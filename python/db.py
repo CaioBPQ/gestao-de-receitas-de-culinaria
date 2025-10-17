@@ -215,6 +215,54 @@ def update_receita(codigo_receita, field, value):
         cursor.close()
         conn.close()
 
+def update_receita_full(codigo_receita, receita):
+    """Atualiza campos da tabela Receita e substitui os ingredientes associados.
+    receita: dict com chaves nome, tempo_preparacao, numero_de_pessoas, dificuldade, categoria, preparacao, ingredientes (lista de dicts)
+    """
+    conn = get_connection()
+    try:
+        cursor = conn.cursor()
+        # atualizar campos principais
+        cursor.execute(
+            "UPDATE Receita SET Nome=%s, TempoPreparacao=%s, NumPessoas=%s, Dificuldade=%s, Categoria=%s, Preparacao=%s WHERE CodigoReceita=%s",
+            (
+                receita.get('nome'),
+                int(receita.get('tempo_preparacao') or 0),
+                int(receita.get('numero_de_pessoas') or receita.get('num_pessoas') or 0),
+                receita.get('dificuldade'),
+                receita.get('categoria'),
+                receita.get('preparacao'),
+                codigo_receita,
+            )
+        )
+
+        # remover ingredientes antigos
+        cursor.execute("DELETE FROM IngredientesDaReceita WHERE CodigoReceita=%s", (codigo_receita,))
+
+        # inserir/garantir ingredientes e associar
+        for ing in receita.get('ingredientes', []):
+            cursor.execute("SELECT CodigoIngrediente FROM Ingrediente WHERE Ingrediente=%s", (ing['nome'],))
+            row = cursor.fetchone()
+            if row:
+                codigo_ing = row[0]
+            else:
+                cursor.execute("INSERT INTO Ingrediente (Ingrediente) VALUES (%s)", (ing['nome'],))
+                codigo_ing = cursor.lastrowid
+
+            cursor.execute(
+                "INSERT INTO IngredientesDaReceita (CodigoReceita, CodigoIngrediente, Quantidade, Medida) VALUES (%s, %s, %s, %s)",
+                (codigo_receita, codigo_ing, int(ing.get('quantidade') or 0), ing.get('unidade'))
+            )
+
+        conn.commit()
+        return True
+    except Error:
+        conn.rollback()
+        raise
+    finally:
+        cursor.close()
+        conn.close()
+
 def delete_receita(codigo_receita):
     conn = get_connection()
     try:
